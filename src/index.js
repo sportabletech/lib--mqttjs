@@ -1,5 +1,18 @@
 import { connect } from 'mqtt'
-import { uInt8ToJSON } from '../../utils/helpers'
+
+function uInt8ToJSON(val) {
+    var str = ''
+    var result
+    for (var i = 0; i < val.length; i++) {
+        str += String.fromCharCode(val[i])
+    }
+    try {
+        result = JSON.parse(str)
+    } catch (e) {
+        return null
+    }
+    return result
+}
 
 export const MqttController = {
     Client: function (name, locationName) {
@@ -26,10 +39,10 @@ export const MqttController = {
                 console.log('sporstcaster closed')
             })
             this.client.on('offline', (e) => {
-                this.error(error, 'offline')
+                this.error(error, 'offline', e)
             })
-            this.client.on('disconnect', () => this.error(error, 'disconnect'))
-            this.client.on('error', () => this.error(error, 'error'))
+            this.client.on('disconnect', (e) => this.error(error, 'disconnect', e))
+            this.client.on('error', (e) => this.error(error, 'error', e))
             this.client.on('message', this.handleMessage.bind(this))
             // this.client.on('packetreceive', (packet) => {
             //   if (packet.cmd === 'pingresp') {
