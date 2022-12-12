@@ -89,9 +89,8 @@ export const MqttController = {
             this.client.end()
         }
 
-        this.error = function (error, type) {
-            console.log(type)
-            error()
+        this.error = function (error, type, e) {
+            error(error, type, e)
         }
     }
 }
